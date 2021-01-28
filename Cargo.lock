@@ -72,7 +72,7 @@ checksum = "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
 
 [[package]]
 name = "bender"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "clap 3.0.0-beta.2",
  "color-eyre",
@@ -568,9 +568,9 @@ checksum = "afb2e1c3ee07430c2cf76151675e583e0f19985fa6efae47d6848a3e2c824f85"
 
 [[package]]
 name = "owo-colors"
-version = "1.2.1"
+version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "13370dae44474229701bb69b90b4f4dca6404cb0357a2d50d635f1171dc3aa7b"
+checksum = "2386b4ebe91c2f7f51082d4cefa145d030e33a1842a96b12e4885cc3c01f7a55"
 
 [[package]]
 name = "peeking_take_while"
@@ -937,7 +937,7 @@ checksum = "b07db065a5cf61a7e4ba64f29e67db906fb1787316516c4e6e5ff0fea1efcd8a"
 [[package]]
 name = "xpc-connection"
 version = "0.2.3"
-source = "git+https://github.com/aspenluxxxy/xpc-connection-rs?rev=181c0ad5e6acaafefa3a3f99c2a1ae21dde5628e#181c0ad5e6acaafefa3a3f99c2a1ae21dde5628e"
+source = "git+https://github.com/aspenluxxxy/xpc-connection-rs?rev=d7642ac4e9d94a173942c7c02cdd7d43cc149750#d7642ac4e9d94a173942c7c02cdd7d43cc149750"
 dependencies = [
  "block",
  "futures",
@@ -948,7 +948,7 @@ dependencies = [
 [[package]]
 name = "xpc-connection-sys"
 version = "0.1.1"
-source = "git+https://github.com/aspenluxxxy/xpc-connection-rs?rev=181c0ad5e6acaafefa3a3f99c2a1ae21dde5628e#181c0ad5e6acaafefa3a3f99c2a1ae21dde5628e"
+source = "git+https://github.com/aspenluxxxy/xpc-connection-rs?rev=d7642ac4e9d94a173942c7c02cdd7d43cc149750#d7642ac4e9d94a173942c7c02cdd7d43cc149750"
 dependencies = [
  "bindgen",
 ]

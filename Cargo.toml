@@ -1,7 +1,7 @@
 [package]
 name = "bender"
 description = "A CLI interface for configuring libhooker on iOS"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["aspen <aspenuwu@protonmail.com>"]
 license-file = "LICENSE"
 repository = "https://github.com/aspenluxxxy/bender"
@@ -21,8 +21,8 @@ once_cell = "1.5"
 plist = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_repr = "0.1"
-xpc-connection = { git = "https://github.com/aspenluxxxy/xpc-connection-rs", rev = "181c0ad5e6acaafefa3a3f99c2a1ae21dde5628e" }
-xpc-connection-sys = { git = "https://github.com/aspenluxxxy/xpc-connection-rs", rev = "181c0ad5e6acaafefa3a3f99c2a1ae21dde5628e" }
+xpc-connection = { git = "https://github.com/aspenluxxxy/xpc-connection-rs", rev = "d7642ac4e9d94a173942c7c02cdd7d43cc149750" }
+xpc-connection-sys = { git = "https://github.com/aspenluxxxy/xpc-connection-rs", rev = "d7642ac4e9d94a173942c7c02cdd7d43cc149750" }
 
 [package.metadata.deb]
 architecture = "iphoneos-arm"
