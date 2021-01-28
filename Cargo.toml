@@ -6,6 +6,7 @@ authors = ["aspen <aspenuwu@protonmail.com>"]
 license-file = "LICENSE"
 repository = "https://github.com/aspenluxxxy/bender"
 edition = "2018"
+readme = "README.md"
 publish = false
 
 [dependencies]
@@ -23,12 +24,18 @@ serde_repr = "0.1"
 xpc-connection = { git = "https://github.com/aspenluxxxy/xpc-connection-rs", rev = "181c0ad5e6acaafefa3a3f99c2a1ae21dde5628e" }
 xpc-connection-sys = { git = "https://github.com/aspenluxxxy/xpc-connection-rs", rev = "181c0ad5e6acaafefa3a3f99c2a1ae21dde5628e" }
 
+[package.metadata.deb]
+architecture = "iphoneos-arm"
+copyright = "2021, aspen <aspenuwu@protonmail.com>"
+depends = "org.coolstar.libhooker (>=1.4.0), cy+cpu.arm64"
+priority = "optional"
+section = "utils"
+
 [profile.release]
 codegen-units = 1
 incremental = true
 lto = true
 opt-level = 3
-panic = 'abort'
 
 [profile.release.package.'*']
 codegen-units = 1
