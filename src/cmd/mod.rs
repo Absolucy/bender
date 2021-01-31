@@ -7,6 +7,7 @@
 	🏳️‍🌈🏳️‍⚧️
 */
 
+pub mod compat;
 pub mod config;
 pub mod list;
 pub mod view;
@@ -92,6 +93,18 @@ pub enum CmdOpts {
 		/// Leave blank to see all currently set configurations.
 		#[clap(value_hint = ValueHint::ExecutablePath)]
 		target: Option<String>,
+	},
+	/// Configure the compatibility mode for tweaks.
+	Compat {
+		/// Use the libhooker default compatibility mode for these tweaks.
+		/// This SHOULD work on 99% of tweaks, especially newer ones.
+		#[clap(short, long, aliases = &["lh", "new", "default"], required_unless_present = "substrate")]
+		libhooker: Vec<String>,
+		/// Use the Substrate compatibility mode for these tweaks.
+		/// This may allow some poorly written / outdated tweaks to work.
+		/// However, this will increase memory usage.
+		#[clap(short, long, alias = "old", required_unless_present = "libhooker")]
+		substrate: Vec<String>,
 	},
 }
 

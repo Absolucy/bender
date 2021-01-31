@@ -50,5 +50,11 @@ pub fn configure(
 		&config,
 	)?;
 
+	println!(
+		"Ensure to {} or {} your device to apply the changes!",
+		"respring".yellow(),
+		"userspace reboot".magenta()
+	);
+
 	Ok(())
 }

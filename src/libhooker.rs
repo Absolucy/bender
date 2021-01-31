@@ -16,6 +16,9 @@ use std::{collections::BTreeMap, ffi::OsStr, fmt::Display, path::PathBuf};
 // Note: we use BTreeMap over HashMap, because BTreeMaps are sorted by their keys,
 // and we don't want to randomly shift the order of everything whenever we save the config.
 
+pub const COMPAT_LIBHOOKER: bool = true;
+pub const COMPAT_SUBSTRATE: bool = false;
+
 const fn default_true() -> bool {
 	true
 }
@@ -41,6 +44,8 @@ impl TweakMode {
 impl Display for TweakMode {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match self {
+			// fyi: this isn't some statement about how whitelist/blacklist is bad or whatever,
+			// i'm just using the same terminology that libhooker does, as it uses the key "allowOrDeny" in the plist.
 			TweakMode::Allow => write!(f, "{}", "allowlist".green()),
 			TweakMode::Deny => write!(f, "{}", "denylist".red()),
 		}
@@ -59,6 +64,12 @@ pub struct LibhookerConfig {
 	pub tweak_configs: ConfigTypes,
 	#[serde(rename = "webProcessTweaks", default = "default_true")]
 	pub web_process_tweaks: bool,
+	#[serde(
+		rename = "memPrefs",
+		default,
+		skip_serializing_if = "BTreeMap::is_empty"
+	)]
+	pub memory_compat_prefs: BTreeMap<String, bool>,
 }
 
 impl Default for LibhookerConfig {
@@ -66,6 +77,7 @@ impl Default for LibhookerConfig {
 		Self {
 			tweak_configs: ConfigTypes::default(),
 			web_process_tweaks: true,
+			memory_compat_prefs: BTreeMap::default(),
 		}
 	}
 }

@@ -60,65 +60,43 @@ fn main() -> Result<()> {
 				target.to_string().yellow(),
 				mode
 			);
-			let mut changes = BTreeMap::<String, bool>::new();
-			if add.contains(&"all".into()) {
-				TWEAKS.iter().for_each(|tweak| {
-					changes.insert(tweak.clone(), true);
-				});
-			} else {
-				add.into_iter()
-					.map(|tweak| {
-						tweaks::fix_tweak_name(&tweak).unwrap_or_else(|| {
-							eprintln!(
-								"Tweak '{}' not found!\nUse `{}` to see a list of available tweaks!",
-								tweak.red(),
-								"bender list tweaks".green()
-							);
-							std::process::exit(1);
-						})
-					})
-					.for_each(|tweak| {
-						println!(
-							"{} {}",
-							match mode {
-								TweakMode::Allow => "ALLOWING".green(),
-								TweakMode::Deny => "DENYING".red(),
-							},
-							tweak.strip_suffix(".dylib").unwrap_or(&tweak)
-						);
-						changes.insert(tweak, true);
-					});
-			}
 
-			if remove.contains(&"all".into()) {
-				TWEAKS.iter().for_each(|tweak| {
-					changes.insert(tweak.clone(), false);
-				});
+			let add = if add.contains(&"all".into()) {
+				TWEAKS.iter()
 			} else {
-				remove
-					.into_iter()
-					.map(|tweak| {
-						tweaks::fix_tweak_name(&tweak).unwrap_or_else(|| {
-							eprintln!(
-								"Tweak '{}' not found!\nUse `{}` to see a list of available tweaks!",
-								tweak.red(),
-								"bender list tweaks".green()
-							);
-							std::process::exit(1);
-						})
-					})
-					.for_each(|tweak| {
-						println!(
-							"{} {}",
-							match mode {
-								TweakMode::Allow => "DENYING".red(),
-								TweakMode::Deny => "ALLOWING".green(),
-							},
-							tweak.strip_suffix(".dylib").unwrap_or(&tweak)
+				add.iter()
+			};
+
+			let remove = if remove.contains(&"all".into()) {
+				TWEAKS.iter()
+			} else {
+				remove.iter()
+			};
+
+			let changes: BTreeMap<String, bool> = add
+				.zip(std::iter::repeat(true))
+				.chain(remove.zip(std::iter::repeat(false)))
+				.map(|(tweak, config)| {
+					let tweak = tweaks::fix_tweak_name(&tweak).unwrap_or_else(|| {
+						eprintln!(
+							"Tweak '{}' not found!\nUse `{}` to see a list of available tweaks!",
+							tweak.clone().red(),
+							"bender list tweaks".green()
 						);
-						changes.insert(tweak, false);
+						std::process::exit(1);
 					});
-			}
+					println!(
+						"{} {}",
+						if mode.check(config) {
+							"ALLOWING".green()
+						} else {
+							"DENYING".red()
+						},
+						tweak.strip_suffix(".dylib").unwrap_or(&tweak)
+					);
+					(tweak, config)
+				})
+				.collect();
 
 			cmd::config::configure(
 				libhooker_config,
@@ -132,6 +110,41 @@ fn main() -> Result<()> {
 		CmdOpts::View { target } => {
 			let target = target.map(Target::from);
 			cmd::view::view(libhooker_config, target)?;
+		}
+		CmdOpts::Compat {
+			libhooker,
+			substrate,
+		} => {
+			let changes: BTreeMap<String, bool> = libhooker
+				.into_iter()
+				.zip(std::iter::repeat(libhooker::COMPAT_LIBHOOKER))
+				.chain(
+					substrate
+						.into_iter()
+						.zip(std::iter::repeat(libhooker::COMPAT_SUBSTRATE)),
+				)
+				.map(|(tweak, compat_mode)| {
+					let tweak = tweaks::fix_tweak_name(&tweak).unwrap_or_else(|| {
+						eprintln!(
+							"Tweak '{}' not found!\nUse `{}` to see a list of available tweaks!",
+							tweak.clone().red(),
+							"bender list tweaks".green()
+						);
+						std::process::exit(1);
+					});
+					println!(
+						"Setting {} to {} mode",
+						tweak.strip_suffix(".dylib").unwrap_or(&tweak),
+						if compat_mode == libhooker::COMPAT_LIBHOOKER {
+							"libhooker default".blue()
+						} else {
+							"substrate compatibility".magenta()
+						},
+					);
+					(tweak, compat_mode)
+				})
+				.collect();
+			cmd::compat::compat(libhooker_config, changes)?;
 		}
 	}
 	Ok(())

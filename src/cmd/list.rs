@@ -7,7 +7,11 @@
 	🏳️‍🌈🏳️‍⚧️
 */
 
-use crate::{cmd::CmdList, libhooker::LibhookerConfig, APPS, DAEMONS, TWEAKS};
+use crate::{
+	cmd::CmdList,
+	libhooker::{LibhookerConfig, COMPAT_LIBHOOKER},
+	APPS, DAEMONS, TWEAKS,
+};
 use color_eyre::eyre::Result;
 use colorful::Colorful;
 use std::ffi::OsStr;
@@ -23,18 +27,28 @@ pub fn list(what: CmdList, cfg: LibhookerConfig) -> Result<()> {
 		}
 		CmdList::Tweaks => {
 			for tweak_name in TWEAKS.iter() {
-				let will_load = default.will_tweak_load(tweak_name);
-				let tweak_name = tweak_name
+				let readable_tweak_name = tweak_name
 					.strip_suffix(".dylib")
 					.map(|x| x.to_string())
 					.unwrap_or_else(|| tweak_name.clone());
 				println!(
-					"{}: {} by default",
-					tweak_name,
-					if will_load {
+					"{}: {} by default{}",
+					readable_tweak_name,
+					if default.will_tweak_load(&tweak_name) {
 						"ENABLED".light_green()
 					} else {
 						"DISABLED".red()
+					},
+					if cfg
+						.memory_compat_prefs
+						.get(tweak_name)
+						.cloned()
+						.unwrap_or(COMPAT_LIBHOOKER)
+						== COMPAT_LIBHOOKER
+					{
+						String::new()
+					} else {
+						format!(", with {}", "substrate compatibility mode".red())
 					}
 				)
 			}
