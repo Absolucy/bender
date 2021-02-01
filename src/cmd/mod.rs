@@ -52,7 +52,7 @@ This software may only be used in situations where the use of libhooker is permi
 )]
 pub enum CmdOpts {
 	/// List tweaks, configurations, et cetera
-	List(CmdList),
+	List(CmdListShim),
 	/// Configure libhooker.
 	Config {
 		/// Change the tweak loader to only load selected tweaks.
@@ -106,6 +106,13 @@ pub enum CmdOpts {
 		#[clap(short, long, alias = "old", required_unless_present = "libhooker")]
 		substrate: Vec<String>,
 	},
+}
+
+// Workaround for https://github.com/clap-rs/clap/issues/2167
+#[derive(Clap, Debug)]
+pub struct CmdListShim {
+	#[clap(subcommand)]
+	pub cmd: CmdList,
 }
 
 #[derive(Clap, Debug)]

@@ -37,7 +37,7 @@ fn main() -> Result<()> {
 		plist::from_file("/var/mobile/Library/Preferences/org.coolstar.libhooker.plist")
 			.unwrap_or_default();
 	match opts {
-		CmdOpts::List(opt) => cmd::list::list(opt, libhooker_config)?,
+		CmdOpts::List(opt) => cmd::list::list(opt.cmd, libhooker_config)?,
 		CmdOpts::Config {
 			allow,
 			deny,
